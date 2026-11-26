@@ -1,0 +1,1486 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#060612;color:#f0eeff}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>AotForms Patcher</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600&display=swap">
+
+<style>
+:root {
+  --bg: #060612;
+  --panel: #0d0d20;
+  --panel2: #111128;
+  --border: #1e1e40;
+  --border2: #2a2a55;
+  --accent: #ff3cac;
+  --accent-glow: #ff3cac55;
+  --accent2: #00f5d4;
+  --accent2-glow: #00f5d444;
+  --accent3: #ffee10;
+  --accent3-glow: #ffee1033;
+  --accent4: #784ba0;
+  --fg: #f0eeff;
+  --fg2: #c0bde8;
+  --muted: #555577;
+  --label: #9090cc;
+  --input-bg: #09091a;
+  --input-border: #20205a;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-ui: 'Inter', system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.6;
+  padding-block: 20px;
+  padding-left: max(14px, env(safe-area-inset-left, 0px));
+  padding-right: max(14px, env(safe-area-inset-right, 0px));
+  min-height: 100%;
+  background-image:
+    radial-gradient(ellipse 100% 40% at 50% -5%, #ff3cac18 0%, transparent 60%),
+    radial-gradient(ellipse 60% 30% at 90% 80%, #00f5d410 0%, transparent 50%),
+    radial-gradient(ellipse 50% 25% at 10% 90%, #784ba018 0%, transparent 50%);
+}
+
+/* ── Header ── */
+.header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.logo {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, #ff3cac, #784ba0, #2b86c5);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-weight: 700; font-size: 10px;
+  color: #fff; flex-shrink: 0;
+  box-shadow: 0 0 20px #ff3cac55, 0 2px 8px #0008;
+  animation: logopulse 2.5s ease-in-out infinite;
+  position: relative; overflow: visible;
+  gap: 0;
+}
+@keyframes logopulse {
+  0%,100% { box-shadow: 0 0 14px #ff3cac55, 0 0 28px #784ba033, 0 2px 8px #0008; }
+  50%      { box-shadow: 0 0 28px #ff3cacbb, 0 0 50px #784ba066, 0 2px 12px #0008; }
+}
+
+/* Wave chars */
+.wave-char {
+  display: inline-block;
+  animation: waveFloat 0.6s ease-in-out infinite alternate;
+  font-size: 10px; font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 0 8px #fff9, 0 0 14px #ff3cac;
+  color: #fff;
+}
+@keyframes waveFloat {
+  0%   { transform: translateY(4px) scaleY(0.9) rotate(-3deg); opacity: 0.75; color: #ffbbee; text-shadow: 0 0 6px #ff3cac; }
+  50%  { transform: translateY(-5px) scaleY(1.12) rotate(2deg); opacity: 1;    color: #fff;    text-shadow: 0 0 14px #fff, 0 0 24px #00f5d4; }
+  100% { transform: translateY(3px) scaleY(0.95) rotate(-1deg); opacity: 0.85; color: #c8b8ff; text-shadow: 0 0 10px #784ba0; }
+}
+
+/* Particle sparkle on logo */
+.logo::before {
+  content: '';
+  position: absolute; inset: -6px;
+  border-radius: 16px;
+  background: conic-gradient(from 0deg, #ff3cac44, #00f5d433, #784ba044, #ff3cac44);
+  animation: logospin 3s linear infinite;
+  z-index: -1;
+  filter: blur(4px);
+}
+.logo::after {
+  content: '';
+  position: absolute; inset: 2px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ff3cac22, #784ba033, #2b86c522);
+  animation: logoglowinner 2s ease-in-out infinite alternate;
+  z-index: 0;
+  pointer-events: none;
+}
+@keyframes logospin {
+  to { transform: rotate(360deg); }
+}
+@keyframes logoglowinner {
+  from { opacity: 0.4; }
+  to   { opacity: 1; }
+}
+.header-text h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; color: var(--fg); }
+.header-text p { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.badge {
+  display: inline-block; font-family: var(--font-mono);
+  font-size: 10px; font-weight: 700; padding: 2px 8px;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #ff3cac22, #00f5d422);
+  border: 1px solid #ff3cac55;
+  color: var(--accent); letter-spacing: 0.5px; margin-left: 6px;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--panel);
+  border-radius: 14px; padding: 18px; margin-bottom: 12px;
+  position: relative; overflow: hidden;
+  /* conic border via pseudo + background-clip trick */
+  border: 1.5px solid transparent;
+  background-clip: padding-box;
+  animation: cardGlow 4s ease-in-out infinite;
+}
+
+/* rotating conic-gradient border */
+.card::before {
+  content: '';
+  position: absolute; inset: -2px;
+  border-radius: 15px;
+  background: conic-gradient(
+    from var(--card-angle, 0deg),
+    #ff3cac, #ffee10, #00f5d4, #784ba0, #2b86c5, #ff6bff, #ff3cac
+  );
+  z-index: -1;
+  animation: cardSpin 4s linear infinite;
+  opacity: 0.75;
+}
+
+/* inner dark fill to keep card looking dark */
+.card::after {
+  content: '';
+  position: absolute; inset: 1.5px;
+  border-radius: 13px;
+  background: var(--panel);
+  z-index: -1;
+}
+
+@property --card-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes cardSpin {
+  to { --card-angle: 360deg; }
+}
+/* stagger via JS-set delay */
+.card::before {
+  animation-delay: var(--card-spin-delay, 0s);
+}
+
+/* shimmer sweep across card */
+.card-shimmer {
+  position: absolute; inset: 0; border-radius: 14px;
+  pointer-events: none; z-index: 0; overflow: hidden;
+}
+.card-shimmer::after {
+  content: '';
+  position: absolute; top: 0; left: -120%; width: 60%; height: 100%;
+  background: linear-gradient(105deg,
+    transparent 20%,
+    rgba(255,255,255,0.055) 50%,
+    transparent 80%
+  );
+  animation: cardShimmer 3.5s ease-in-out infinite;
+}
+
+@keyframes cardGlow {
+  0%,100% { box-shadow: 0 0 10px #ff3cac22, 0 2px 20px #0009; }
+  25%      { box-shadow: 0 0 24px #ffee1033, 0 2px 28px #0009; }
+  50%      { box-shadow: 0 0 24px #00f5d433, 0 0 48px #00f5d411, 0 2px 20px #0009; }
+  75%      { box-shadow: 0 0 24px #784ba044, 0 2px 28px #0009; }
+}
+
+@keyframes cardShimmer {
+  0%     { left: -120%; opacity: 0; }
+  10%    { opacity: 1; }
+  60%,100% { left: 160%; opacity: 0; }
+}
+
+.section-title {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  background: linear-gradient(90deg, #ff3cac, #00f5d4);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  filter: drop-shadow(0 0 6px #ff3cac66);
+}
+.section-title::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(to right, #ff3cac55, #00f5d422, transparent);
+}
+
+/* ── Fields ── */
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 9px;
+}
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label {
+  font-size: 10px; font-weight: 600; color: var(--label);
+  font-family: var(--font-mono); letter-spacing: 0.5px;
+}
+.field input[type="text"], .field input[type="number"] {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 7px; color: var(--fg);
+  font-family: var(--font-mono); font-size: 12px;
+  padding: 7px 10px; width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  min-width: 0;
+}
+.field input:focus {
+  outline: none;
+  border-color: #ff3cac;
+  background: #110020;
+  box-shadow: 0 0 0 2px #ff3cac33, 0 0 16px #ff3cac22;
+}
+.field input.changed {
+  border-color: var(--accent2);
+  color: var(--accent2);
+  box-shadow: 0 0 0 1px var(--accent2-glow), 0 0 10px var(--accent2-glow);
+}
+
+/* ── Slider ── */
+.strength-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.strength-label-row { display: flex; justify-content: space-between; align-items: center; }
+.strength-label-row label {
+  font-size: 10px; font-weight: 600; color: var(--label);
+  font-family: var(--font-mono); letter-spacing: 0.5px;
+}
+.strength-value {
+  font-family: var(--font-mono); font-size: 14px; font-weight: 700;
+  background: linear-gradient(90deg, #ff3cac, #ffee10);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-variant-numeric: tabular-nums;
+  filter: drop-shadow(0 0 6px #ff3cac88);
+  min-width: 42px; text-align: right;
+}
+
+/* Slider — JS updates inline style directly, no CSS var trick */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%; height: 6px; border-radius: 3px;
+  outline: none; cursor: pointer;
+  /* background set by JS via setSliderBg() */
+  background: linear-gradient(to right, var(--accent) 35%, var(--input-border) 35%);
+  transition: box-shadow 0.2s;
+}
+input[type="range"]:focus { box-shadow: 0 0 0 3px var(--accent-glow); }
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #b59fff, #7c4fff);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 8px var(--accent-glow), 0 2px 6px #0008;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(1.2);
+  box-shadow: 0 0 16px var(--accent-glow), 0 2px 8px #0008;
+}
+
+.hint { font-size: 10px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+
+/* ── Buttons ── */
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+.btn {
+  font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+  padding: 11px 22px; border-radius: 9px; border: none; cursor: pointer;
+  letter-spacing: 0.5px; transition: opacity 0.15s, transform 0.1s, box-shadow 0.2s;
+  flex-shrink: 0; position: relative; overflow: hidden;
+}
+.btn:active { transform: scale(0.96); }
+.btn-primary {
+  background: linear-gradient(135deg, #9966ff, #6633cc);
+  color: #fff;
+  box-shadow: 0 4px 16px #8b6fff44, 0 1px 4px #0006;
+}
+.btn-primary:hover { opacity: 0.9; box-shadow: 0 6px 24px #8b6fff66; }
+.btn-secondary {
+  background: transparent; color: var(--label);
+  border: 1px solid var(--border2);
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+
+/* ── Select ── */
+.styled-select {
+  background: var(--input-bg); border: 1px solid var(--input-border);
+  border-radius: 7px; color: var(--fg);
+  font-family: var(--font-mono); font-size: 12px;
+  padding: 7px 10px; width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.styled-select:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+/* ── Checkbox ── */
+.check-label {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  font-family: var(--font-mono); font-size: 11px; color: var(--label);
+  user-select: none;
+}
+.check-label input[type="checkbox"] {
+  accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer;
+}
+.check-label:hover { color: var(--fg2); }
+
+/* ── Tabs ── */
+.output-tabs {
+  display: flex; gap: 2px; margin-bottom: 12px;
+  border-bottom: 1px solid var(--border); padding-bottom: 0;
+}
+.tab-btn {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+  padding: 7px 16px; background: none; border: none;
+  border-bottom: 2px solid transparent; color: var(--muted);
+  cursor: pointer; letter-spacing: 0.8px; margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
+.tab-btn:hover:not(.active) { color: var(--fg2); }
+
+/* ── Code box ── */
+.code-box {
+  background: var(--input-bg); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 12px 14px; font-family: var(--font-mono);
+  font-size: 11px; line-height: 1.7; color: var(--accent2);
+  word-break: break-all; max-height: 200px; overflow-y: auto;
+  white-space: pre-wrap; min-width: 0; user-select: all; display: none;
+}
+.code-box.active { display: block; }
+
+/* ── Copy row ── */
+.copy-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.byte-count { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.btn-copy {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+  padding: 6px 16px; background: transparent;
+  border: 1px solid var(--border2); border-radius: 6px;
+  color: var(--label); cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.btn-copy:hover, .btn-copy.copied {
+  border-color: var(--accent2); color: var(--accent2);
+  box-shadow: 0 0 8px var(--accent2-glow);
+}
+
+/* ── Path box ── */
+.path-box {
+  background: var(--input-bg); border: 1px solid var(--input-border);
+  border-radius: 8px; padding: 12px 14px; font-family: var(--font-mono);
+  font-size: 11px; color: var(--fg2); word-break: break-all; line-height: 1.9;
+}
+.path-box span { color: var(--muted); }
+
+/* ── Download button ── */
+.download-btn {
+  display: block; width: 100%; font-family: var(--font-mono);
+  font-size: 13px; font-weight: 700; padding: 15px;
+  background: linear-gradient(135deg, #00e5a0, #00aa77);
+  color: #001a0d; border: none;
+  border-radius: 10px; cursor: pointer; text-align: center;
+  letter-spacing: 0.5px;
+  transition: opacity 0.15s, transform 0.1s, box-shadow 0.2s;
+  margin-top: 14px;
+  box-shadow: 0 4px 20px var(--accent2-glow), 0 1px 4px #0006;
+}
+.download-btn:hover { opacity: 0.9; box-shadow: 0 6px 28px #00e5a055; }
+.download-btn:active { transform: scale(0.98); }
+.download-btn:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
+
+/* ── Divider inside card ── */
+.inner-divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  left: 50%; transform: translateX(-50%) translateY(80px);
+  background: linear-gradient(90deg, #00e5a0, #00bb88);
+  color: #001a0d;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+  padding: 10px 22px; border-radius: 20px;
+  transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s;
+  opacity: 0; pointer-events: none; white-space: nowrap; z-index: 100;
+  box-shadow: 0 4px 20px #00e5a055;
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ── Scanlines overlay ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.07) 2px,
+    rgba(0,0,0,0.07) 4px
+  );
+  pointer-events: none; z-index: 9998;
+  animation: scanlinesShift 8s linear infinite;
+}
+@keyframes scanlinesShift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 40px; }
+}
+
+/* ── Ambient BG aurora ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 30%, #ff3cac0d 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 70%, #00f5d40a 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 50% 50%, #784ba00a 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+  animation: auroraShift 10s ease-in-out infinite alternate;
+}
+@keyframes auroraShift {
+  0%   { opacity: 0.6; transform: scale(1) rotate(0deg); }
+  50%  { opacity: 1;   transform: scale(1.08) rotate(2deg); }
+  100% { opacity: 0.7; transform: scale(0.97) rotate(-1deg); }
+}
+
+/* ── Card hover ── */
+.card {
+  transition: transform 0.2s;
+}
+.card:hover {
+  transform: translateY(-2px) scale(1.005);
+}
+.card:hover::before {
+  opacity: 1;
+  animation: cardSpin 1.5s linear infinite;
+}
+
+/* ── Section title: color shift + pulse ── */
+.section-title {
+  animation: titlePulse 3s ease-in-out infinite, titleColorShift 6s linear infinite;
+  background-size: 200% auto;
+}
+@keyframes titlePulse {
+  0%,100% { filter: drop-shadow(0 0 5px #ff3cac66); }
+  50%      { filter: drop-shadow(0 0 16px #ff3cacff) drop-shadow(0 0 32px #00f5d488); }
+}
+@keyframes titleColorShift {
+  0%   { background-image: linear-gradient(90deg,#ff3cac,#ffee10,#00f5d4); }
+  33%  { background-image: linear-gradient(90deg,#00f5d4,#ff3cac,#784ba0); }
+  66%  { background-image: linear-gradient(90deg,#784ba0,#2b86c5,#ff6bff); }
+  100% { background-image: linear-gradient(90deg,#ff3cac,#ffee10,#00f5d4); }
+}
+.section-title::after {
+  animation: dividerColorShift 6s linear infinite;
+}
+@keyframes dividerColorShift {
+  0%   { background: linear-gradient(to right,#ff3cac88,#00f5d422,transparent); }
+  33%  { background: linear-gradient(to right,#ffee1088,#784ba022,transparent); }
+  66%  { background: linear-gradient(to right,#00f5d488,#2b86c522,transparent); }
+  100% { background: linear-gradient(to right,#ff3cac88,#00f5d422,transparent); }
+}
+
+/* ── Strength value flicker ── */
+.strength-value {
+  animation: valFlicker 4s ease-in-out infinite;
+}
+@keyframes valFlicker {
+  0%,90%,100% { filter: drop-shadow(0 0 6px #ff3cac88); }
+  93%          { filter: drop-shadow(0 0 2px #ff3cac22); }
+  96%          { filter: drop-shadow(0 0 10px #ffee10cc); }
+}
+
+/* ── Badge shimmer ── */
+.badge {
+  position: relative; overflow: hidden;
+}
+.badge::after {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: badgeShimmer 3s ease-in-out infinite;
+}
+@keyframes badgeShimmer {
+  0%   { left: -100%; }
+  40%,100% { left: 160%; }
+}
+
+/* ── Input focus ripple ── */
+.field input:focus {
+  animation: inputRipple 0.4s ease-out;
+}
+@keyframes inputRipple {
+  from { box-shadow: 0 0 0 6px #ff3cac44, 0 0 24px #ff3cac22; }
+  to   { box-shadow: 0 0 0 2px #ff3cac33, 0 0 16px #ff3cac22; }
+}
+
+/* ── Particle canvas ── */
+#particleCanvas {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 1;
+  opacity: 0.5;
+}
+
+/* ensure content is above canvas */
+.header, .card { position: relative; z-index: 2; }
+#outputCard { position: relative; z-index: 2; }
+.toast { z-index: 9999; }
+
+/* ── Download button pulse ── */
+.download-btn {
+  animation: dlPulse 2.5s ease-in-out infinite;
+}
+.download-btn:disabled { animation: none; }
+@keyframes dlPulse {
+  0%,100% { box-shadow: 0 4px 20px #00e5a033, 0 1px 4px #0006; }
+  50%      { box-shadow: 0 4px 32px #00e5a088, 0 0 50px #00f5d433, 0 1px 4px #0006; }
+}
+
+/* ── Btn-primary sparkle ── */
+.btn-primary {
+  animation: btnGlow 3s ease-in-out infinite;
+}
+@keyframes btnGlow {
+  0%,100% { box-shadow: 0 4px 16px #8b6fff44, 0 1px 4px #0006; }
+  50%      { box-shadow: 0 4px 28px #8b6fff99, 0 0 40px #ff3cac33, 0 1px 4px #0006; }
+}
+</style>
+
+<div class="header">
+  <div class="logo" id="waveLogo" style="font-size:9px;letter-spacing:0;width:48px;height:48px;overflow:visible;position:relative;padding:0;">
+  <span class="wave-char" style="animation-delay:0s">T</span><span class="wave-char" style="animation-delay:0.08s">p</span><span class="wave-char" style="animation-delay:0.16s">h</span><span class="wave-char" style="animation-delay:0.24s">á</span><span class="wave-char" style="animation-delay:0.32s">t</span>
+</div>
+  <div class="header-text">
+    <h1>Make Adr Patcher <span class="badge">FF OB55 ✓</span></h1>
+    <p>OB55 · neck→head dual-lock · 40% soft aim · jitter humanize · fix rung 92%</p>
+  </div>
+</div>
+
+<!-- Aimbot Config -->
+<div class="card">
+  <div class="section-title">Aimbot Config</div>
+  <div class="strength-row">
+    <div class="strength-label-row">
+      <label>STRENGTH</label>
+      <span class="strength-value" id="strengthVal">40%</span>
+    </div>
+    <input type="range" id="strength" min="1" max="100" value="40" oninput="updateStrength(this)">
+    <div class="hint">40% = bám nhẹ cổ→đầu, smooth 12 mượt tự nhiên, không snap — safe anti-ban</div>
+  </div>
+  <div class="field-grid">
+    <div class="field">
+      <label>SMOOTH_FACTOR</label>
+      <input type="number" id="smooth" value="12.0" step="0.5" min="1" max="30" oninput="markChanged(this)">
+    </div>
+    <div class="field">
+      <label>FOV_CLAMP (°)</label>
+      <input type="number" id="fov" value="35" step="5" min="10" max="180" oninput="markChanged(this)">
+    </div>
+    <div class="field">
+      <label>RECOIL_REDUCE (%)</label>
+      <input type="number" id="recoil" value="40" step="5" min="0" max="100" oninput="markChanged(this)">
+    </div>
+    <div class="field">
+      <label>HEAD_BONE_INDEX</label>
+      <input type="number" id="bone" value="0" step="1" min="0" max="20" oninput="markChanged(this)">
+    </div>
+  </div>
+</div>
+
+<!-- Offsets -->
+<div class="card">
+  <div class="section-title">Offsets</div>
+  <div class="field-grid" id="offsetGrid"></div>
+</div>
+
+<!-- Extra Offsets -->
+<div class="card">
+  <div class="section-title">Extra Offsets</div>
+  <div class="field-grid" id="extraGrid"></div>
+</div>
+
+<!-- Weapon Mods -->
+<div class="card">
+  <div class="section-title">Weapon Mods</div>
+  <div class="field-grid">
+    <div class="field">
+      <label>BULLET_SPEED ×</label>
+      <input type="number" id="bulletSpeedMul" value="1.0" step="0.1" min="0.1" max="5" oninput="markChanged(this)">
+    </div>
+    <div class="field">
+      <label>DAMAGE ×</label>
+      <input type="number" id="damageMul" value="1.0" step="0.1" min="0.1" max="5" oninput="markChanged(this)">
+    </div>
+    <div class="field">
+      <label>FIRE_RATE ×</label>
+      <input type="number" id="fireRateMul" value="1.0" step="0.1" min="0.1" max="3" oninput="markChanged(this)">
+    </div>
+  </div>
+  <div style="margin-top:12px;display:flex;gap:14px;flex-wrap:wrap">
+    <label class="check-label">
+      <input type="checkbox" id="chkNoSpread"> NO_SPREAD
+    </label>
+    <label class="check-label">
+      <input type="checkbox" id="chkNoBulletDrop"> NO_BULLET_DROP
+    </label>
+  </div>
+</div>
+
+<!-- Crosshair -->
+<div class="card">
+  <div class="section-title">Crosshair / Aim Point</div>
+  <div class="field-grid">
+    <div class="field">
+      <label>HEAD_LOCK</label>
+      <select id="headLock" class="styled-select">
+        <option value="0">Off</option>
+        <option value="1" selected>Soft (smooth)</option>
+        <option value="2">Hard (snap)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>AIM_Y_OFFSET</label>
+      <input type="number" id="aimYOffset" value="-8" step="1" min="-50" max="50" oninput="markChanged(this)">
+    </div>
+    <div class="field">
+      <label>AIM_X_OFFSET</label>
+      <input type="number" id="aimXOffset" value="0" step="1" min="-50" max="50" oninput="markChanged(this)">
+    </div>
+    <div class="field">
+      <label>TARGET_BONE</label>
+      <select id="targetBone" class="styled-select">
+        <option value="0">Head</option>
+        <option value="1" selected>Neck ✓ (anti-ban)</option>
+        <option value="2">Chest</option>
+        <option value="3">Hip</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>DUAL_TARGET</label>
+      <select id="dualTarget" class="styled-select">
+        <option value="0">Off</option>
+        <option value="1" selected>Neck→Head ✓ (best)</option>
+        <option value="2">Head only</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>NECK→HEAD_DIST (px)</label>
+      <input type="number" id="neckHeadDist" value="55" step="5" min="10" max="200" oninput="markChanged(this)">
+    </div>
+    <div class="field">
+      <label>JITTER_AMOUNT</label>
+      <input type="number" id="jitterAmount" value="1.8" step="0.1" min="0" max="6" oninput="markChanged(this)">
+    </div>
+  </div>
+  <div class="hint" style="margin-top:10px">AIM_Y_OFFSET: -8 = aim vào cổ (dưới head bone) — tránh flag headsnap, vẫn chí mạng</div>
+  <div class="hint" style="margin-top:6px">DUAL_TARGET Neck→Head: bám cổ trước, khi tâm &lt; NECK→HEAD_DIST px tới đầu thì kéo lên — không flag headsnap</div>
+  <div class="hint" style="margin-top:4px">JITTER_AMOUNT ~1.5–2.5: micro-noise trên aim path, humanize curve, tránh bot-pattern scan</div>
+
+  <div class="inner-divider"></div>
+  <div class="section-title" style="margin-bottom:12px">Recoil Control</div>
+  <div class="strength-row" style="margin-bottom:12px">
+    <div class="strength-label-row">
+      <label>RECOIL_CONTROL</label>
+      <span class="strength-value" id="recoilCtrlVal">92%</span>
+    </div>
+    <input type="range" id="recoilCtrl" min="0" max="100" value="92" oninput="updateSlider(this,'recoilCtrlVal')">
+    <div class="hint">92% = fix rung gần hoàn toàn, giữ chút recoil cho tự nhiên — không flag</div>
+  </div>
+  <label class="check-label">
+    <input type="checkbox" id="chkRecoilCtrl" checked> BẬT RECOIL CONTROL
+  </label>
+
+  <div class="inner-divider"></div>
+  <div class="section-title" style="margin-bottom:12px">Pull To Head</div>
+  <div class="field-grid">
+    <div class="field">
+      <label>PULL_STRENGTH</label>
+      <input type="number" id="pullStrength" value="0.6" step="0.05" min="0" max="1" oninput="markChanged(this)">
+    </div>
+    <div class="field">
+      <label>PULL_RADIUS (px)</label>
+      <input type="number" id="pullRadius" value="120" step="10" min="10" max="500" oninput="markChanged(this)">
+    </div>
+    <div class="field">
+      <label>PULL_SPEED</label>
+      <input type="number" id="pullSpeed" value="4.0" step="0.5" min="0.5" max="20" oninput="markChanged(this)">
+    </div>
+  </div>
+  <div class="hint" style="margin-top:8px">PULL kéo tâm vào đầu khi aim trong PULL_RADIUS — mày kéo gần đầu nó tự vào</div>
+  <label class="check-label" style="margin-top:10px">
+    <input type="checkbox" id="chkPull" checked> BẬT PULL TO HEAD
+  </label>
+</div>
+
+<!-- Bones -->
+<div class="card">
+  <div class="section-title">Bones</div>
+  <div class="field-grid" id="bonesGrid"></div>
+</div>
+
+<!-- Build -->
+<div class="card">
+  <div class="section-title">Build</div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="buildPatch()">👑 BUILD libpatch.adr</button>
+    <button class="btn btn-secondary" onclick="resetAll()">Reset offsets</button>
+  </div>
+</div>
+
+<!-- Output -->
+<div class="card" id="outputCard" style="display:none">
+  <div class="section-title">Output</div>
+  <div class="output-tabs">
+    <button class="tab-btn active" onclick="switchTab('b64',this)">BASE64</button>
+    <button class="tab-btn" onclick="switchTab('hex',this)">HEX</button>
+    <button class="tab-btn" onclick="switchTab('bin',this)">BINARY</button>
+  </div>
+  <div class="code-box active" id="tab-b64"></div>
+  <div class="code-box" id="tab-hex"></div>
+  <div class="code-box" id="tab-bin"></div>
+  <div class="copy-row">
+    <span class="byte-count" id="byteCount"></span>
+    <button class="btn-copy" id="copyBtn" onclick="copyCode()">Copy</button>
+  </div>
+
+  <div style="margin-top:20px">
+    <div class="section-title">Cài vào game</div>
+    <div class="path-box">
+      <span>/storage/emulated/0/</span>Download/<strong style="color:var(--accent2)">libpatch.adr</strong><br>
+      <span style="color:var(--muted)">→ file tải về tự vào thư mục Download</span>
+    </div>
+  </div>
+
+  <button class="download-btn" id="dlBtn" onclick="downloadPatch()">↓ Tải libpatch.adr</button>
+</div>
+
+<audio id="bgMusic" loop preload="auto"></audio>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const EXTRA_OFFSETS = {
+  NoSpread:          0x9A,
+  NoBulletDrop:      0x9B,
+  BulletSpeed:       0x6C,
+  DamageMulti:       0x70,
+  MagSize:           0x88,
+  FireRate:          0x7C,
+  RecoilVertical:    0xA0,
+  RecoilHorizontal:  0xA4,
+  RecoilPattern:     0xA8,
+  RecoilRecovery:    0xAC,
+  SpreadAngle:       0xB0,
+  SpreadMoving:      0xB4,
+  SpreadCrouching:   0xB8,
+  RecoilScale:       0xBC,
+};
+
+const DEFAULT_OFFSETS = {
+  // ── OB55 Static Offsets ──
+  InitBase: 0xA342EFC, StaticClass: 0x5C, CurrentMatch: 0x50,
+  MatchStatus: 0x8C, LocalPlayer: 0xC8, DictionaryEntities: 0x68,
+  Camera: 0x30, Player_Data: 0x78, Player_ShadowBase: 0x14A0,
+  XPose: 0x78, CurrentObserver: 0xB4, ObserverPlayer: 0x28,
+  UnlimitedAmmo: 0xE0, GameTimer: 0x10, FixedDeltaTime: 0x24,
+  Player_IsDead: 0x7C, Player_Name: 0x380, LocalPlayerAttributes: 0x3A0,
+  AimbotVisible: 0x4A4, isBotOffs: 0x1B0,
+  AvatarManager: 0x320, Avatar: 0xD0, Avatar_Data: 0x30,
+  Avatar_Data_IsTeam: 0x74, Avatar_IsVisible: 0xC1,
+  FollowCamera: 0x5C0, AimRotation: 0x2E0, MainCameraTransform: 0x300, ViewMatrix: 0xE4,
+  Weapon: 0x2C0, WeaponData: 0x68, WeaponRecoil: 0xC, NoReload: 0x99,
+  IS_FIRING: 0x540, weaponinfo: 0x978, WeaponInfo: 0x64, WeaponID: 0x14,
+  WeaponOnHand: 0x54, guntipposition: 0x38, bullet_hit: 0x2C,
+  SilentFiring: 0x6C0, SilentHit: 0x7D0, Silents: 0x38, Silentr: 0x2C,
+  HeadCollider: 0x360, ReplaceCollider: 0x54,
+};
+
+const DEFAULT_BONES = {
+  Head: 0x494, Neck: 0x496, Spine: 0x49C, Hip: 0x498, Root: 0x4A8,
+  LeftAnkle: 0x4B0, RightAnkle: 0x4B4, LeftFoot: 0x4B8, RightFoot: 0x4BC,
+  LeftShoulder: 0x4C8, RightShoulder: 0x4CC,
+  RightHand: 0x4D0, LeftHand: 0x4D4, RightElbow: 0x4D8, LeftElbow: 0x4DC,
+};
+// Neck = 0x496 (Head+Spine midpoint ptr) — real bone slot, anti-ban primary target
+const NECK_BONE_OFFSET = 0x496;
+
+let currentTab = 'b64';
+let lastBlob = null;
+
+// ── Slider fix: set background directly on the element ──
+function setSliderBg(el) {
+  const pct = ((el.value - el.min) / (el.max - el.min)) * 100;
+  el.style.background = `linear-gradient(to right, #8b6fff ${pct}%, #252540 ${pct}%)`;
+}
+
+function updateStrength(el) {
+  setSliderBg(el);
+  document.getElementById('strengthVal').textContent = el.value + '%';
+}
+
+function updateSlider(el, valId) {
+  setSliderBg(el);
+  document.getElementById(valId).textContent = el.value + '%';
+}
+
+function buildFields(gridId, defaults, prefix) {
+  const grid = document.getElementById(gridId);
+  grid.innerHTML = '';
+  for (const [name, val] of Object.entries(defaults)) {
+    const div = document.createElement('div');
+    div.className = 'field';
+    div.innerHTML = `<label>${name}</label>
+      <input type="text" id="${prefix}${name}" value="0x${val.toString(16).toUpperCase()}" oninput="markChanged(this)">`;
+    grid.appendChild(div);
+  }
+}
+
+function markChanged(el) {
+  el.classList.toggle('changed', el.value !== el.defaultValue);
+}
+
+function resetAll() {
+  for (const [n, v] of Object.entries(DEFAULT_OFFSETS)) {
+    const el = document.getElementById('off_' + n);
+    if (el) { el.value = '0x' + v.toString(16).toUpperCase(); el.classList.remove('changed'); }
+  }
+  for (const [n, v] of Object.entries(DEFAULT_BONES)) {
+    const el = document.getElementById('bone_' + n);
+    if (el) { el.value = '0x' + v.toString(16).toUpperCase(); el.classList.remove('changed'); }
+  }
+  for (const [n, v] of Object.entries(EXTRA_OFFSETS)) {
+    const el = document.getElementById('extra_' + n);
+    if (el) { el.value = '0x' + v.toString(16).toUpperCase(); el.classList.remove('changed'); }
+  }
+  document.getElementById('bulletSpeedMul').value = '1.0';
+  document.getElementById('damageMul').value = '1.0';
+  document.getElementById('fireRateMul').value = '1.0';
+  document.getElementById('chkNoSpread').checked = false;
+  document.getElementById('chkNoBulletDrop').checked = false;
+  document.getElementById('aimYOffset').value = '-8';
+  document.getElementById('aimXOffset').value = '0';
+  document.getElementById('headLock').value = '1';
+  document.getElementById('targetBone').value = '1'; // Neck default
+  document.getElementById('dualTarget').value = '1';
+  document.getElementById('neckHeadDist').value = '55';
+  document.getElementById('jitterAmount').value = '1.8';
+  const rc = document.getElementById('recoilCtrl');
+  rc.value = '92'; updateSlider(rc, 'recoilCtrlVal');
+  document.getElementById('chkRecoilCtrl').checked = true;
+  document.getElementById('pullStrength').value = '0.55';
+  document.getElementById('pullRadius').value = '120';
+  document.getElementById('pullSpeed').value = '4.0';
+  document.getElementById('chkPull').checked = true;
+  document.getElementById('smooth').value = '12.0';
+  document.getElementById('fov').value = '35';
+  document.getElementById('recoil').value = '40';
+  const s2 = document.getElementById('strength');
+  s2.value = '40'; updateStrength(s2);
+  document.getElementById('strengthVal').textContent = '40%';
+  showToast('Reset về OB55 defaults (neck→head dual, smooth 12, fov 35, jitter 1.8)');
+}
+
+function parseHex(str) {
+  const v = parseInt(str.trim().replace(/^0x/i, ''), 16);
+  return isNaN(v) ? 0 : v;
+}
+function u32(v) {
+  const b = new ArrayBuffer(4);
+  new DataView(b).setUint32(0, v, true);
+  return new Uint8Array(b);
+}
+function f32(v) {
+  const b = new ArrayBuffer(4);
+  new DataView(b).setFloat32(0, v, true);
+  return new Uint8Array(b);
+}
+function concat(arrays) {
+  const total = arrays.reduce((s, a) => s + a.length, 0);
+  const out = new Uint8Array(total);
+  let off = 0;
+  for (const a of arrays) { out.set(a, off); off += a.length; }
+  return out;
+}
+
+
+
+function buildPatch() {
+  const strength = parseInt(document.getElementById('strength').value) / 100;
+  const smooth   = parseFloat(document.getElementById('smooth').value);
+  const fov      = parseFloat(document.getElementById('fov').value);
+  const recoil   = parseInt(document.getElementById('recoil').value) / 100;
+  const boneIdx  = parseInt(document.getElementById('bone').value);
+
+  const offs = {};
+  for (const name of Object.keys(DEFAULT_OFFSETS)) {
+    const el = document.getElementById('off_' + name);
+    offs[name] = el ? parseHex(el.value) : DEFAULT_OFFSETS[name];
+  }
+  const bones = {};
+  for (const name of Object.keys(DEFAULT_BONES)) {
+    const el = document.getElementById('bone_' + name);
+    bones[name] = el ? parseHex(el.value) : DEFAULT_BONES[name];
+  }
+
+  const enc = new TextEncoder();
+  const parts = [];
+
+  parts.push(new Uint8Array([0x41,0x44,0x52,0x50]));
+  parts.push(u32(1));
+
+  const sec1 = [];
+  for (const [name, val] of Object.entries(offs)) {
+    const n = enc.encode(name);
+    sec1.push(new Uint8Array([n.length]), n, u32(val));
+  }
+  const s1 = concat(sec1);
+  parts.push(new Uint8Array([0x01]), u32(s1.length), s1);
+
+  const sec2 = [];
+  for (const [name, val] of Object.entries(bones)) {
+    const n = enc.encode(name);
+    sec2.push(new Uint8Array([n.length]), n, u32(val));
+  }
+  const s2 = concat(sec2);
+  parts.push(new Uint8Array([0x02]), u32(s2.length), s2);
+
+  const s3 = concat([
+    f32(strength), f32(smooth), f32(fov), u32(boneIdx), f32(recoil),
+    u32(offs.AvatarManager||0), u32(offs.Avatar||0), u32(offs.Avatar_Data||0),
+    u32(offs.HeadCollider||0), u32(offs.AimRotation||0),
+    u32(offs.ViewMatrix||0), u32(offs.AimbotVisible||0),
+  ]);
+  parts.push(new Uint8Array([0x03]), u32(s3.length), s3);
+
+  const noSpread     = document.getElementById('chkNoSpread').checked ? 1 : 0;
+  const noBulletDrop = document.getElementById('chkNoBulletDrop').checked ? 1 : 0;
+  const bSpeedMul    = parseFloat(document.getElementById('bulletSpeedMul').value) || 1;
+  const dmgMul       = parseFloat(document.getElementById('damageMul').value) || 1;
+  const frMul        = parseFloat(document.getElementById('fireRateMul').value) || 1;
+  const extraOffs    = {};
+  for (const name of Object.keys(EXTRA_OFFSETS)) {
+    const el = document.getElementById('extra_' + name);
+    extraOffs[name] = el ? parseHex(el.value) : EXTRA_OFFSETS[name];
+  }
+  const s4parts = [];
+  for (const [name, val] of Object.entries(extraOffs)) {
+    const n = enc.encode(name);
+    s4parts.push(new Uint8Array([n.length]), n, u32(val));
+  }
+  const s4 = concat([...s4parts, new Uint8Array([noSpread, noBulletDrop]), f32(bSpeedMul), f32(dmgMul), f32(frMul)]);
+  parts.push(new Uint8Array([0x04]), u32(s4.length), s4);
+
+  const headLock     = parseInt(document.getElementById('headLock').value);
+  const aimY         = parseInt(document.getElementById('aimYOffset').value) || 0;
+  const aimX         = parseInt(document.getElementById('aimXOffset').value) || 0;
+  const tgtBone      = parseInt(document.getElementById('targetBone').value);
+  const recoilCtrlOn = document.getElementById('chkRecoilCtrl').checked ? 1 : 0;
+  const recoilCtrlPct= parseInt(document.getElementById('recoilCtrl').value) / 100;
+  const pullOn       = document.getElementById('chkPull').checked ? 1 : 0;
+  const pullStr      = parseFloat(document.getElementById('pullStrength').value) || 0.55;
+  const pullRad      = parseFloat(document.getElementById('pullRadius').value) || 120;
+  const pullSpd      = parseFloat(document.getElementById('pullSpeed').value) || 4.0;
+  // Dual-target + jitter (new fields)
+  const dualTarget   = parseInt(document.getElementById('dualTarget').value);
+  const neckHeadDist = parseFloat(document.getElementById('neckHeadDist').value) || 55;
+  const jitterAmt    = parseFloat(document.getElementById('jitterAmount').value) || 1.8;
+  const s5 = concat([
+    u32(headLock), u32(tgtBone), f32(aimX), f32(aimY),
+    new Uint8Array([recoilCtrlOn]), f32(recoilCtrlPct),
+    new Uint8Array([pullOn]), f32(pullStr), f32(pullRad), f32(pullSpd),
+    // section 5 ext: dual-target mode, neck->head threshold, jitter
+    u32(dualTarget), f32(neckHeadDist), f32(jitterAmt),
+  ]);
+  parts.push(new Uint8Array([0x05]), u32(s5.length), s5);
+
+  const noise = new Uint8Array(16);
+  crypto.getRandomValues(noise);
+  const s6 = concat([new Uint8Array([0xDE,0xAD]), noise, new Uint8Array([0xBE,0xEF])]);
+  parts.push(new Uint8Array([0x06]), u32(s6.length), s6);
+
+  lastBlob = concat(parts);
+
+  const b64 = btoa(String.fromCharCode(...lastBlob));
+  const hex = [...lastBlob].map(b => b.toString(16).padStart(2,'0')).join('');
+  const binPrev = [...lastBlob.slice(0,32)].map(b => b.toString(2).padStart(8,'0')).join(' ') + ' ...';
+
+  document.getElementById('tab-b64').textContent = b64;
+  document.getElementById('tab-hex').textContent = (hex.match(/.{1,64}/g)||[hex]).join('\n');
+  document.getElementById('tab-bin').textContent = binPrev;
+  document.getElementById('byteCount').textContent = lastBlob.length + ' bytes';
+  document.getElementById('outputCard').style.display = '';
+  switchTab(currentTab, null);
+  showToast('✓ Built — ' + lastBlob.length + ' bytes');
+}
+
+function switchTab(id, btn) {
+  currentTab = id;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.code-box').forEach(b => b.classList.remove('active'));
+  if (btn) {
+    btn.classList.add('active');
+  } else {
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      if (b.textContent.toLowerCase().includes(id)) b.classList.add('active');
+    });
+  }
+  const box = document.getElementById('tab-' + id);
+  if (box) box.classList.add('active');
+}
+
+function copyCode() {
+  const box = document.getElementById('tab-' + currentTab);
+  const text = box ? box.textContent : '';
+  const btn = document.getElementById('copyBtn');
+  const done = () => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1800);
+  };
+  navigator.clipboard.writeText(text).then(done).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch {}
+    document.body.removeChild(ta);
+  });
+}
+
+async function downloadPatch() {
+  if (!lastBlob) { showToast('⚡ Build trước đã'); return; }
+  const btn = document.getElementById('dlBtn');
+  btn.disabled = true; btn.textContent = '...';
+  let saved = false;
+  try {
+    const dl = await Promise.race([
+      window.claude?.use('downloads'),
+      new Promise(r => setTimeout(() => r(null), 2500))
+    ]);
+    if (dl) {
+      await dl.save({ filename: 'libpatch.adr', data: lastBlob });
+      saved = true;
+      showToast('↓ Đã lưu libpatch.adr');
+    }
+  } catch {}
+  if (!saved) {
+    try {
+      const blob = new Blob([lastBlob], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'libpatch.adr'; a.style.display = 'none';
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1500);
+      showToast('↓ Đang tải libpatch.adr');
+    } catch(e) {
+      showToast('✗ Lỗi: ' + (e?.message || 'không tải được'));
+    }
+  }
+  setTimeout(() => { btn.disabled = false; btn.textContent = '↓ Tải libpatch.adr'; }, 1500);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const s = document.getElementById('strength');
+  s.value = '40'; setSliderBg(s);
+  document.getElementById('strengthVal').textContent = '40%';
+  const rc = document.getElementById('recoilCtrl');
+  rc.value = '92'; setSliderBg(rc);
+  document.getElementById('recoilCtrlVal').textContent = '92%';
+  buildFields('offsetGrid', DEFAULT_OFFSETS, 'off_');
+  buildFields('extraGrid', EXTRA_OFFSETS, 'extra_');
+  buildFields('bonesGrid', DEFAULT_BONES, 'bone_');
+
+  // ── Inject shimmer + stagger card border spin ──
+  document.querySelectorAll('.card').forEach((card, i) => {
+    // shimmer sweep layer
+    const sh = document.createElement('div');
+    sh.className = 'card-shimmer';
+    sh.style.animationDelay = `${i * 0.55}s`;
+    card.prepend(sh);
+    // stagger the border spin so each card is at a different angle
+    card.style.setProperty('--card-spin-delay', `-${i * 0.6}s`);
+    card.style.animationDelay = `${i * 0.4}s`;
+    // each card gets slightly different glow cycle offset
+    card.querySelectorAll('*').forEach(el => {});
+  });
+
+  // ── Canvas Setup ──
+  const canvas = document.createElement('canvas');
+  canvas.id = 'particleCanvas';
+  document.body.prepend(canvas);
+  const ctx = canvas.getContext('2d');
+  const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+  resize();
+  window.addEventListener('resize', resize);
+  const W = () => canvas.width, H = () => canvas.height;
+
+  // ── PALETTE ──
+  const PAL = [
+    '#ff3cac','#ff006e','#ff4d00','#ffee10',
+    '#00f5d4','#00cfff','#784ba0','#c084fc',
+    '#ff6bff','#39ff14','#ff9500','#00ffaa'
+  ];
+  const rndCol = () => PAL[Math.floor(Math.random() * PAL.length)];
+
+  // ══════════════════════════════════════════
+  // 1. 3D WAVE GRID — spring physics, perspective
+  // ══════════════════════════════════════════
+  const COLS = 22, ROWS = 14;
+  const grid = Array.from({length: ROWS * COLS}, (_, i) => {
+    const c = i % COLS, r = Math.floor(i / COLS);
+    return { gx: c/(COLS-1), gy: r/(ROWS-1), z:0, vz:0, phase: (c*0.5+r*0.7)*Math.PI*0.4 };
+  });
+  const FOV = 350, CAM_Z = 2.4, TILT = 0.55;
+  function proj(gx, gy, gz) {
+    const x3 = (gx-.5)*3, y3b = (gy-.5)*1.8, z3 = gz*.7;
+    const y3 = y3b*Math.cos(TILT) - z3*Math.sin(TILT);
+    const z3t = y3b*Math.sin(TILT) + z3*Math.cos(TILT) + CAM_Z;
+    const sc = FOV/z3t;
+    return { sx: W()*.5+x3*sc, sy: H()*.4+y3*sc, sc, z3t };
+  }
+
+  // ══════════════════════════════════════════
+  // 2. CHAOS WAVE RIBBONS — 30 of them, every angle
+  // ══════════════════════════════════════════
+  const ribbons = Array.from({length: 16}, () => {
+    const vert = Math.random() > 0.5;
+    return {
+      vert,
+      pos: Math.random() * (vert ? H() : W()),
+      len: Math.random()*140+80,
+      speed: (Math.random()*1.6+0.4) * (Math.random()>.5?1:-1),
+      amp: Math.random()*35+10,
+      freq: Math.random()*0.04+0.006,
+      phase: Math.random()*Math.PI*2,
+      phaseSpd: Math.random()*0.04+0.01,
+      color: rndCol(),
+      alpha: Math.random()*0.35+0.08,
+      lineW: Math.random()*1.4+0.4,
+      glowR: Math.random()*10+4,
+      // second harmonic for chaos
+      amp2: Math.random()*18+4,
+      freq2: Math.random()*0.08+0.02,
+      phase2: Math.random()*Math.PI*2,
+    };
+  });
+
+  // ══════════════════════════════════════════
+  // 3. ORBS — big glowing blobs that drift and pulse
+  // ══════════════════════════════════════════
+  const orbs = Array.from({length: 4}, () => ({
+    x: Math.random()*window.innerWidth,
+    y: Math.random()*window.innerHeight,
+    r: Math.random()*60+40,
+    vx: (Math.random()-.5)*.4,
+    vy: (Math.random()-.5)*.4,
+    color: rndCol(),
+    phase: Math.random()*Math.PI*2,
+    phaseSpd: Math.random()*0.025+0.008,
+    alpha: Math.random()*0.07+0.03,
+  }));
+
+  // ══════════════════════════════════════════
+  // 4. SPARKS — tiny fast particles shooting out
+  // ══════════════════════════════════════════
+  const sparks = [];
+  function spawnSparks(x, y, n) {
+    for (let i=0; i<n; i++) {
+      const ang = Math.random()*Math.PI*2;
+      const spd = Math.random()*7+2;
+      sparks.push({
+        x, y,
+        vx: Math.cos(ang)*spd, vy: Math.sin(ang)*spd,
+        r: Math.random()*2.5+0.8,
+        color: rndCol(),
+        alpha: 1,
+        life: 1,
+        decay: Math.random()*0.04+0.025,
+        trail: [],
+      });
+    }
+  }
+
+  // Auto-spawn sparks at random spots
+  setInterval(() => {
+    spawnSparks(Math.random()*window.innerWidth, Math.random()*window.innerHeight, 4);
+  }, 1200);
+
+  // ══════════════════════════════════════════
+  // 5. RIPPLES — touch / click
+  // ══════════════════════════════════════════
+  const ripples = [];
+  function spawnRipple(x, y) {
+    const color = rndCol();
+    const n = Math.floor(Math.random()*4)+5;
+    for (let i=0; i<n; i++) {
+      ripples.push({
+        x, y, r:0,
+        maxR: 70+i*35+Math.random()*20,
+        alpha: 0.8-i*0.1,
+        color,
+        delay: i*25,
+        born: performance.now(),
+        dur: 380+i*50,
+        lineW: 2.5-i*0.3,
+      });
+    }
+    // push 3d grid
+    const nx=x/W(), ny=y/H();
+    for (const pt of grid) {
+      const d = Math.hypot(pt.gx-nx, pt.gy-ny);
+      if (d < 0.4) pt.vz += (0.4-d)*5;
+    }
+    spawnSparks(x, y, 10);
+  }
+
+  canvas.addEventListener('touchstart', e=>{
+    e.preventDefault();
+    for (const t of e.changedTouches) spawnRipple(t.clientX, t.clientY);
+  },{passive:false});
+  canvas.addEventListener('mousedown', e=>spawnRipple(e.clientX, e.clientY));
+  document.addEventListener('touchstart', e=>{
+    if(e.target===canvas)return;
+    for (const t of e.changedTouches) spawnRipple(t.clientX, t.clientY);
+  },{passive:true});
+  document.addEventListener('mousedown', e=>{ if(e.target!==canvas) spawnRipple(e.clientX,e.clientY); });
+
+  // ══════════════════════════════════════════
+  // 6. FLOATING DOTS
+  // ══════════════════════════════════════════
+  const dots = Array.from({length:30}, () => ({
+    x: Math.random()*window.innerWidth,
+    y: Math.random()*window.innerHeight,
+    r: Math.random()*1.8+0.3,
+    color: rndCol(),
+    vx: (Math.random()-.5)*.4,
+    vy: (Math.random()-.5)*.4,
+    alpha: Math.random()*.6+0.1,
+    pulse: Math.random()*Math.PI*2,
+    ps: Math.random()*.03+0.008,
+  }));
+
+  // ══════════════════════════════════════════
+  // MAIN LOOP
+  // ══════════════════════════════════════════
+  let frame = 0;
+  let lastTime = 0;
+  const TARGET_MS = 1000/50; // cap at 50fps to save CPU
+  function tick(now) {
+    requestAnimationFrame(tick);
+    const dt = now - lastTime;
+    if (dt < TARGET_MS) return;
+    lastTime = now - (dt % TARGET_MS);
+    frame++;
+    const t = now * 0.001;
+    ctx.clearRect(0, 0, W(), H());
+
+    // ── ORBS (background blobs) ──
+    for (const o of orbs) {
+      o.phase += o.phaseSpd;
+      o.x += o.vx; o.y += o.vy;
+      if (o.x < -o.r) o.x = W()+o.r;
+      if (o.x > W()+o.r) o.x = -o.r;
+      if (o.y < -o.r) o.y = H()+o.r;
+      if (o.y > H()+o.r) o.y = -o.r;
+      const pr = o.r*(1+0.3*Math.sin(o.phase));
+      const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, pr);
+      g.addColorStop(0, o.color+'44');
+      g.addColorStop(0.5, o.color+'18');
+      g.addColorStop(1, 'transparent');
+      ctx.globalAlpha = o.alpha*(0.7+0.3*Math.sin(o.phase*1.3));
+      ctx.beginPath(); ctx.arc(o.x, o.y, pr, 0, Math.PI*2);
+      ctx.fillStyle = g; ctx.fill();
+    }
+
+    // ── 3D GRID UPDATE ──
+    for (const pt of grid) {
+      const autoZ =
+        Math.sin(pt.gx*9+t*1.8+pt.phase)*0.65 +
+        Math.sin(pt.gy*7+t*1.3+pt.phase*1.4)*0.5 +
+        Math.sin((pt.gx+pt.gy)*6+t*2.2)*0.4 +
+        Math.sin(pt.gx*4-pt.gy*8+t*1.1)*0.3 +
+        Math.sin((pt.gx*pt.gy)*10+t*2.8)*0.2;
+      pt.vz += (autoZ-pt.z)*0.1 - pt.vz*0.8;
+      pt.z += pt.vz;
+    }
+
+    // ── 3D GRID DRAW ──
+    // horizontal lines
+    for (let r=0; r<ROWS; r++) {
+      ctx.beginPath();
+      let first=true;
+      for (let c=0; c<COLS; c++) {
+        const pt=grid[r*COLS+c];
+        const {sx,sy}=proj(pt.gx,pt.gy,pt.z);
+        first ? ctx.moveTo(sx,sy) : ctx.lineTo(sx,sy); first=false;
+      }
+      const hue=(r/ROWS*200+t*35)%360;
+      const bright=0.15+r/ROWS*0.3;
+      ctx.globalAlpha=bright;
+      ctx.strokeStyle=`hsl(${hue},100%,65%)`;
+      ctx.lineWidth=0.7+r/ROWS*0.8;
+      ctx.shadowColor=`hsl(${hue},100%,70%)`;
+      ctx.shadowBlur=5+Math.abs(grid[r*COLS+Math.floor(COLS/2)].z)*8;
+      ctx.stroke(); ctx.shadowBlur=0;
+    }
+    // vertical lines
+    for (let c=0; c<COLS; c++) {
+      ctx.beginPath(); let first=true;
+      for (let r=0; r<ROWS; r++) {
+        const pt=grid[r*COLS+c];
+        const {sx,sy}=proj(pt.gx,pt.gy,pt.z);
+        first ? ctx.moveTo(sx,sy) : ctx.lineTo(sx,sy); first=false;
+      }
+      const hue=(c/COLS*140+200+t*20)%360;
+      ctx.globalAlpha=0.1+c/COLS*0.12;
+      ctx.strokeStyle=`hsl(${hue},90%,60%)`;
+      ctx.lineWidth=0.4; ctx.stroke();
+    }
+    // peak dots
+    for (let r=0; r<ROWS; r++) for (let c=0; c<COLS; c++) {
+      const pt=grid[r*COLS+c];
+      const az=Math.abs(pt.z);
+      if (az<0.35) continue;
+      const {sx,sy}=proj(pt.gx,pt.gy,pt.z);
+      const hue=(pt.phase*55+t*45)%360;
+      const inten=Math.min(1,az/1.2);
+      ctx.globalAlpha=Math.min(0.85,inten);
+      ctx.beginPath(); ctx.arc(sx,sy,1+inten*2.5,0,Math.PI*2);
+      ctx.fillStyle=`hsl(${hue},100%,78%)`;
+      ctx.shadowColor=`hsl(${hue},100%,80%)`;
+      ctx.shadowBlur=6+inten*8;
+      ctx.fill(); ctx.shadowBlur=0;
+    }
+
+    // ── CHAOS RIBBONS ──
+    for (const rb of ribbons) {
+      rb.phase += rb.phaseSpd;
+      rb.phase2 += rb.phaseSpd*1.7;
+      rb.pos += rb.speed;
+      const lim = rb.vert ? H() : W();
+      if (rb.speed>0 && rb.pos>lim+rb.len) rb.pos=-rb.len;
+      if (rb.speed<0 && rb.pos<-rb.len) rb.pos=lim+rb.len;
+
+      ctx.beginPath();
+      ctx.globalAlpha=rb.alpha*(0.7+0.3*Math.sin(rb.phase*0.5));
+      ctx.strokeStyle=rb.color;
+      ctx.lineWidth=rb.lineW;
+      ctx.shadowColor=rb.color;
+      ctx.shadowBlur=rb.glowR;
+
+      const steps=Math.ceil(rb.len);
+      for (let s=0; s<=steps; s++) {
+        const off =
+          Math.sin(s*rb.freq*10+rb.phase)*rb.amp +
+          Math.sin(s*rb.freq2*10+rb.phase2)*rb.amp2;
+        let px,py;
+        if (rb.vert) { px=W()*.5+off; py=rb.pos-rb.len+s*(rb.speed>0?1:-1)*Math.sign(rb.speed)||s; }
+        else { px=rb.pos-rb.len+s; py=H()*.5+off; }
+        // actually do it right:
+        if (rb.vert) { px=rb.pos+off; py=s/steps*H(); }
+        else         { px=s/steps*W(); py=rb.pos+off; }
+        s===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+      }
+      ctx.stroke(); ctx.shadowBlur=0;
+    }
+
+    // ── FLOATING DOTS ──
+    for (const p of dots) {
+      p.pulse+=p.ps; p.x+=p.vx; p.y+=p.vy;
+      if(p.x<-4)p.x=W()+4; if(p.x>W()+4)p.x=-4;
+      if(p.y<-4)p.y=H()+4; if(p.y>H()+4)p.y=-4;
+      ctx.globalAlpha=p.alpha*(0.6+0.4*Math.sin(p.pulse));
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.color;
+      ctx.shadowColor=p.color; ctx.shadowBlur=p.r*7;
+      ctx.fill(); ctx.shadowBlur=0;
+    }
+
+    // ── SPARKS + TRAILS ──
+    for (let i=sparks.length-1; i>=0; i--) {
+      const sp=sparks[i];
+      sp.trail.push({x:sp.x,y:sp.y});
+      if(sp.trail.length>5) sp.trail.shift();
+      sp.x+=sp.vx; sp.y+=sp.vy;
+      sp.vx*=0.93; sp.vy*=0.93;
+      sp.life-=sp.decay;
+      if(sp.life<=0){sparks.splice(i,1);continue;}
+      // draw trail
+      for (let j=1; j<sp.trail.length; j++) {
+        const ta=sp.life*(j/sp.trail.length)*0.6;
+        ctx.globalAlpha=ta;
+        ctx.strokeStyle=sp.color;
+        ctx.lineWidth=sp.r*(j/sp.trail.length);
+        ctx.shadowColor=sp.color; ctx.shadowBlur=6;
+        ctx.beginPath();
+        ctx.moveTo(sp.trail[j-1].x,sp.trail[j-1].y);
+        ctx.lineTo(sp.trail[j].x,sp.trail[j].y);
+        ctx.stroke(); ctx.shadowBlur=0;
+      }
+      // draw head
+      ctx.globalAlpha=sp.life*0.9;
+      ctx.beginPath(); ctx.arc(sp.x,sp.y,sp.r,0,Math.PI*2);
+      ctx.fillStyle=sp.color;
+      ctx.shadowColor=sp.color; ctx.shadowBlur=12;
+      ctx.fill(); ctx.shadowBlur=0;
+    }
+
+    // ── TOUCH RIPPLES ──
+    for (let i=ripples.length-1; i>=0; i--) {
+      const rp=ripples[i];
+      const el=now-rp.born-rp.delay;
+      if(el<0)continue;
+      const prog=Math.min(el/rp.dur,1);
+      if(prog>=1){ripples.splice(i,1);continue;}
+      const eased=1-(1-prog)*(1-prog);
+      rp.r=eased*rp.maxR;
+      const aT=prog<0.12?prog/0.12:1-(prog-0.12)/0.88;
+      ctx.globalAlpha=Math.max(0,rp.alpha*aT*(1-prog*.5));
+      ctx.beginPath(); ctx.arc(rp.x,rp.y,rp.r,0,Math.PI*2);
+      ctx.strokeStyle=rp.color;
+      ctx.lineWidth=Math.max(0.3,rp.lineW*(1-prog));
+      ctx.shadowColor=rp.color; ctx.shadowBlur=12*(1-prog);
+      ctx.stroke(); ctx.shadowBlur=0;
+    }
+
+    ctx.globalAlpha=1;
+  }
+  requestAnimationFrame(tick);
+
+  // ── Music Player ──
+  const audio = document.getElementById('bgMusic');
+  audio.src = 'P3__Nhạc_hay.mp3';
+  audio.volume = 0.9;
+
+  let musicStarted = false;
+  function startMusicOnce() {
+    if (!musicStarted) {
+      musicStarted = true;
+      audio.play().then(() => {
+      }).catch(() => {});
+    }
+    document.removeEventListener('touchstart', startMusicOnce);
+    document.removeEventListener('mousedown', startMusicOnce);
+  }
+  document.addEventListener('touchstart', startMusicOnce, { passive: true });
+  document.addEventListener('mousedown', startMusicOnce);
+
+});
+</script>
+
+</body></html>
